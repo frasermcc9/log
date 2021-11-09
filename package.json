@@ -1,6 +1,6 @@
 {
   "name": "@frasermcc/log",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Simple logging utility",
   "main": "build/index.js",
   "scripts": {

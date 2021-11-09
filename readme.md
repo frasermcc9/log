@@ -2,6 +2,14 @@
 
 A super simple log.
 
+![npm](https://img.shields.io/npm/v/@frasermcc/log?color=%20%2323b84b&style=for-the-badge)
+
+
+
+```
+npm i @frasermcc/log
+```
+
 # Usage
 
 ```ts
