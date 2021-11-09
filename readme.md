@@ -2,7 +2,7 @@
 
 A super simple log.
 
-[![npm][[image](https://img.shields.io/npm/v/@frasermcc/log?color=%20%2323b84b&style=for-the-badge)]][https://www.npmjs.com/package/@frasermcc/log]
+[![npm version](https://img.shields.io/npm/v/@frasermcc/log?color=%20%2323b84b&style=for-the-badge)](https://www.npmjs.com/package/@frasermcc/log)
 
 
 ```
