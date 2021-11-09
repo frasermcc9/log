@@ -1,6 +1,6 @@
 {
   "name": "@frasermcc/log",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Simple logging utility",
   "main": "build/index.js",
   "scripts": {
@@ -19,5 +19,9 @@
   },
   "keywords": [
     "log"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frasermcc9/log.git"
+  }
 }
