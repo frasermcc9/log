@@ -76,6 +76,18 @@ Note that the log level of the @Trace decorator is set to TRACE by default. It c
 @Trace(Level.INFO)
 ```
 
+## Persist
+Logs can be persisted to a file.
+```ts
+// save logs to file named myLog.log
+Log.persist("myLog.log");
+
+// default name is the Log level with the log file extension.
+// save logs to file named WARN.log
+Log.level(Level.WARN)
+Log.persist()
+```
+
 ## Block
 
 The Log#block(message, color) method can be used to print a block of text.

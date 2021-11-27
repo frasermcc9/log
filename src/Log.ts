@@ -1,12 +1,32 @@
 import chalk from "chalk";
 import figlet from "figlet";
+import { createWriteStream, WriteStream } from "fs";
 import { Level, LogArgs, TIME_LENGTH, MAX_PAD } from "./declarations";
 
 export default class Log {
   private static severity = Level.TRACE;
+  private static stream?: WriteStream;
 
+  /**
+   * Set the minimum level required for the log to output.
+   *
+   * @param level the {@link Level} to set the logging to
+   */
   static level(level: Level) {
     this.severity = level;
+  }
+
+  /**
+   * Persist the logs to a file.
+   *
+   * @param file The name of the file (optional)
+   * @returns
+   */
+  static persist(file: string = Level[this.severity] + ".log") {
+    if (this.stream) {
+      return console.error("Log#Persist must only be called a single time.");
+    }
+    this.stream = createWriteStream(file);
   }
 
   static dynamicLog(msg: string, severity: Level) {
@@ -33,7 +53,9 @@ export default class Log {
 
     this.log({ msg, severity: Level.ERROR });
 
-    console.log(chalk.red(Error().stack?.replace(/Error:\s*\n/, "")));
+    this.logAndPersist(Error().stack?.replace(/Error:\s*\n/, "") ?? "", {
+      consoleColor: chalk.red,
+    });
   }
   static critical(msg: string): void {
     if (!this.requireLevel(Level.CRITICAL)) return;
@@ -44,15 +66,22 @@ export default class Log {
       severity: Level.CRITICAL,
     });
 
-    console.log(
-      chalk.whiteBright.bgRed(Error().stack?.replace(/Error:\s*\n/, ""))
-    );
+    this.logAndPersist(Error().stack?.replace(/Error:\s*\n/, "") ?? "", {
+      consoleColor: chalk.whiteBright.bgRed,
+    });
 
-    process.exit(1);
+    if (this.stream) {
+      this.stream.once("close", () => {
+        process.exit(1);
+      });
+      this.stream.close();
+    } else {
+      process.exit(1);
+    }
   }
 
   static block(text: string, color: chalk.Chalk = chalk.whiteBright) {
-    console.log(color(figlet.textSync(text)));
+    this.logAndPersist(figlet.textSync(text), { consoleColor: color });
   }
 
   static requireLevel(level: Level) {
@@ -75,7 +104,7 @@ export default class Log {
 
     const color = this.colorResolver(severity);
 
-    console.log(color(logBuilder));
+    this.logAndPersist(logBuilder, { consoleColor: color });
   }
 
   private static colorResolver(severity: Level) {
@@ -90,6 +119,21 @@ export default class Log {
         return chalk.red;
       default:
         return chalk.whiteBright.bgRed;
+    }
+  }
+
+  static logAndPersist(
+    message: string,
+    {
+      consoleColor,
+      extraArgs = [],
+    }: { consoleColor?: chalk.Chalk; extraArgs?: any[] }
+  ) {
+    this.stream?.write(message + extraArgs.toString() + "\n");
+    if (consoleColor) {
+      console.log(consoleColor(message, extraArgs));
+    } else {
+      console.log(message, extraArgs);
     }
   }
 }

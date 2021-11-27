@@ -14,18 +14,17 @@ export default function Trace(withLevel: Level = Level.TRACE) {
       const end = performance.now();
       const time = (end - start).toPrecision(3);
 
-      if (true) {
-        Log.dynamicLog(
-          `[${target.constructor.name}] ${propertyName}(args) => result in ${time}ms.`,
-          withLevel
-        );
+      Log.dynamicLog(
+        `[${target.constructor.name}] ${propertyName}(args) => result in ${time} ms.`,
+        withLevel
+      );
 
-        if (Log.requireLevel(withLevel)) {
-          console.groupCollapsed();
-          console?.log("Arguments:", args);
-          console?.log("Returns:", result);
-          console.groupEnd();
-        }
+      if (Log.requireLevel(withLevel)) {
+        console.groupCollapsed();
+
+        Log.logAndPersist("Arguments:", { extraArgs: args });
+        Log.logAndPersist("Returns:", { extraArgs: result });
+        console.groupEnd();
       }
 
       return result;
